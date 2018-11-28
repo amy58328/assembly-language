@@ -1,11 +1,9 @@
-; AddTwo.asm - adds two 32-bit integers.
-; Chapter 3 example
-
 .386
-.model flat,stdcall
-.stack 4096
-ExitProcess proto,dwExitCode:dword
-include irvine32.inc
+
+Include \masm32\include\Irvine32.inc
+Includelib \masm32\lib\Irvine32.lib 
+includelib \masm32\lib\Kernel32.lib
+includelib \masm32\lib\User32.lib
 
 .data
 	score dword		?
