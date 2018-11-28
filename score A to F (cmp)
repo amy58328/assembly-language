@@ -1,0 +1,85 @@
+.386
+
+Include \masm32\include\Irvine32.inc
+Includelib \masm32\lib\Irvine32.lib 
+includelib \masm32\lib\Kernel32.lib
+includelib \masm32\lib\User32.lib
+
+.data
+	score dword		?
+	string1 byte	"enter number between 0 and 100 :",0dh,0ah,0
+	string2	byte	"enter another number betweem 0 and 100 :",0dh,0ah,0
+	A		byte	"A" ,0dh,0ah,0
+	B		byte	"B", 0dh, 0ah, 0
+	bb		byte	"C", 0dh, 0ah, 0
+	D		byte	"D", 0dh, 0ah, 0
+	F		byte	"F", 0dh, 0ah, 0
+
+.code
+main proc
+L0:
+	mov edx,	offset	string1
+	call writestring
+
+	call readint
+	mov score,	eax
+
+	mov eax,	0
+	cmp	eax,	score
+	jg l1
+
+	mov eax,	100
+	cmp	eax,	score
+	jl l1
+
+	mov eax,	90
+	cmp	eax,	score
+	jle	l2
+
+	mov eax,	80
+	cmp eax,	score
+	jle	l3
+
+	mov eax,	70
+	cmp	eax,	score
+	jle	l4
+
+	mov eax,	60
+	cmp eax,	score
+	jle	l5
+
+	jmp L6
+
+L1:
+	mov edx,	offset	string2
+	call writestring
+	jmp L0
+
+L2:
+	mov edx,	offset	A
+	call writestring
+	jmp	l0
+
+L3:
+	mov edx,	offset	B
+	call writestring
+	jmp	L0
+
+L4:
+	mov edx,	offset bb
+	call writestring
+	jmp L0
+
+L5:
+	mov edx,	offset	D
+	call writestring
+	jmp L0
+
+L6:
+	mov edx,	offset F
+	call writestring
+	jmp L0
+
+	exit
+	main endp
+	end main
