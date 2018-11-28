@@ -1,0 +1,69 @@
+; AddTwo.asm - adds two 32-bit integers.
+; Chapter 3 example
+
+.386
+.model flat,stdcall
+.stack 4096
+ExitProcess proto,dwExitCode:dword
+include irvine32.inc
+
+.data
+	score dword		?
+	string1 byte	"enter number between 0 and 100 :",0dh,0ah,0
+	string2	byte	"enter another number betweem 0 and 100 :",0dh,0ah,0
+	A		byte	"A" ,0dh,0ah,0
+	B		byte	"B", 0dh, 0ah, 0
+	bb		byte	"C", 0dh, 0ah, 0
+	D		byte	"D", 0dh, 0ah, 0
+	F		byte	"F", 0dh, 0ah, 0
+
+.code
+main proc
+L0:
+	mov edx,	offset	string1
+	call writestring
+
+	call readint
+	mov score,	eax
+
+.if(score>=0)
+	.if(score<=100)
+		.if(score >=90)
+			mov	edx,	offset	A
+			call writestring
+		.else 
+			.if(score >=80)
+				mov edx,	offset B
+				call writestring
+			.else
+				.if(score >= 70)
+					mov edx,	offset bb
+					call writestring
+				.else
+					.if(score >= 60)
+						mov edx,	offset D
+						call writestring
+					.else 
+						mov edx,	offset F
+						call writestring
+					.endif
+				.endif
+			.endif
+		.endif
+
+	.else 
+		mov edx,	offset	string2
+		call writestring
+	.endif
+
+.else
+	mov edx,	offset string2
+	call writestring
+.endif
+
+jmp L0;
+
+
+	invoke ExitProcess,0
+main endp
+end main
