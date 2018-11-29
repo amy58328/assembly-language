@@ -1,0 +1,106 @@
+.386
+
+Include \masm32\include\Irvine32.inc
+Includelib \masm32\lib\Irvine32.lib 
+includelib \masm32\lib\Kernel32.lib
+includelib \masm32\lib\User32.lib
+
+.data
+	string1	byte	"1.  X AND Y",0dh,0ah,0
+	string2	byte	"2.  X OR Y",0dh,0ah,0
+	string3	byte	"3.  NOT X",0dh,0ah,0
+	string4	byte	"4.  X XOR Y",0dh,0ah,0
+	string5	byte	"5.  leave this program",0dh,0ah,0
+	string6 byte	"enter the number you want to do",0dh,0ah,0
+	string7 byte	"enter X and Y that you want to calculate",0dh,0ah,0
+	string8 byte	"enter X that you want to calculate",0dh,0ah,0
+	number	dword	?
+	x 		dword	?
+	y		dword	?
+
+.code
+main proc
+	mov edx,	offset string1
+	call writestring
+	mov edx,	offset string2
+	call writestring
+	mov edx,	offset string3
+	call writestring
+	mov edx,	offset string4
+	call writestring
+	mov edx,	offset string5
+	call writestring
+
+L0:
+	mov edx,	offset	string6
+	call writestring
+
+	call readint
+	mov number,	eax
+
+.if(number == 1 || number == 2 || number == 4)
+	mov edx,	offset string7
+	call writestring
+
+	call readhex
+	mov x,	eax
+
+	call readhex
+	mov	y,	eax
+.elseif(number == 3)
+	mov edx,	offset string8
+	call writestring
+
+	call readhex
+	mov x,	eax
+.endif
+
+
+
+.if(number == 1)
+	mov edx,	offset string1
+	call writestring
+
+	mov eax,	x
+	and eax,	y
+	call writehex
+	call crlf
+
+	jmp L0
+.elseif(number == 2)
+	mov edx,	offset string2
+	call writestring
+
+	mov eax,	x
+	or  eax,	y
+	call writehex
+	call crlf
+
+	jmp L0
+.elseif(number == 3)
+	mov edx,	offset string3
+	call writestring
+
+	mov eax,	x
+	not eax
+	call writehex
+	call crlf
+
+	jmp L0
+.elseif(number == 4 )
+	mov edx,	offset string4
+	call writestring
+
+	mov eax,	x
+	xor eax,	y
+	call writehex
+	call crlf
+
+	jmp L0
+.elseif(number == 5)
+	mov edx,	offset string5
+	call writestring
+.endif
+	exit
+	main endp
+	end main
