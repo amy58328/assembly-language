@@ -1,0 +1,90 @@
+.386
+
+Include \masm32\include\Irvine32.inc
+Includelib \masm32\lib\Irvine32.lib 
+includelib \masm32\lib\Kernel32.lib
+includelib \masm32\lib\User32.lib
+
+.data
+	true = 1
+	false = 0
+	grade		dword 	?
+	credits	 	dword	?
+	okto 		dword	?
+	string1 byte	"enter number between 0 and 100 :",0dh,0ah,0
+	string2	byte	"enter another number betweem 0 and 100 :",0dh,0ah,0
+
+
+.code
+main proc
+L0:
+
+	mov okto,	false
+
+	call readint
+	mov grade,	eax
+
+	call readint
+	mov credits,	eax
+
+	
+
+	mov eax,	350
+	cmp eax,	grade
+	jl	L1
+
+	mov eax,	250
+	cmp eax,	grade
+	jl L2
+
+	mov eax,	12
+	cmp eax,	credits
+	jge	L1
+
+	mov eax,	okto
+	call writeint
+	call crlf
+	jmp L0
+
+
+
+
+
+L1:
+	mov okto,	true
+	mov eax,	okto
+	call writeint
+	call crlf
+	jmp L0
+
+L2:
+	mov eax,	16
+	cmp eax,	credits
+	jge	L1
+	
+	mov eax,	12
+	cmp eax,	credits
+	jge	L1
+
+	mov eax,	okto
+	call writeint
+	call crlf
+	jmp L0
+
+.if(grade > 350)
+	mov okto,	true
+.elseif(grade>250 && credits <=16)
+	mov okto,	true
+.elseif(credits <= 12)
+	mov okto,	true
+.endif
+
+
+	mov eax,	okto
+	call writeint
+
+
+	
+	exit
+	main endp
+	end main
