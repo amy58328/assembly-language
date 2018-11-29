@@ -11,8 +11,15 @@ includelib \masm32\lib\User32.lib
 	grade		dword 	?
 	credits	 	dword	?
 	okto 		dword	?
-	string1 byte	"enter number between 0 and 100 :",0dh,0ah,0
-	string2	byte	"enter another number betweem 0 and 100 :",0dh,0ah,0
+	string1 byte	"enter the grade between 0 and 400 :",0dh,0ah,0
+	string2	byte	"enter the credit between 1 and 30 :",0dh,0ah,0
+	string3	byte	"enter the grade and the credit :",0dh,0ah,0
+
+	string4 byte	"the grade is : ",0
+	string5 byte	"the credit is :",0
+
+	yes 	byte	"you can enter the school",0dh,0ah,0
+	no		byte	"you can not enter the school",0dh,0ah,0
 
 
 .code
@@ -21,14 +28,46 @@ L0:
 
 	mov okto,	false
 
+	mov edx,	offset	string3
+	call writestring
+
+L5:
 	call readint
 	mov grade,	eax
+
+.if(grade < 0 || grade > 400)
+	mov edx,	offset	string1
+	call writestring
+	jmp L5
+.elseif(grade == 0)
+	jmp L3
+.endif
+
+
+L6:
 
 	call readint
 	mov credits,	eax
 
-	
+.if(credits < 1 || credits > 30)
+	mov edx,	offset	string2
+	call writestring
+	jmp L6
+.endif
 
+	mov edx,	offset	string4
+	call writestring
+	mov eax,	grade
+	call writeint
+	call crlf
+
+	mov edx,	offset 	string5
+	call writestring
+	mov eax,	credits
+	call writeint
+	call crlf
+
+	
 	mov eax,	350
 	cmp eax,	grade
 	jl	L1
@@ -41,9 +80,11 @@ L0:
 	cmp eax,	credits
 	jge	L1
 
-	mov eax,	okto
-	call writeint
 	call crlf
+	mov edx,	offset	no
+	call writestring
+	call crlf
+
 	jmp L0
 
 
@@ -51,10 +92,11 @@ L0:
 
 
 L1:
-	mov okto,	true
-	mov eax,	okto
-	call writeint
 	call crlf
+	mov edx,	offset yes
+	call writestring656
+	call crlf
+
 	jmp L0
 
 L2:
@@ -66,23 +108,14 @@ L2:
 	cmp eax,	credits
 	jge	L1
 
-	mov eax,	okto
-	call writeint
+	call crlf
+	mov edx,	offset	no
+	call writestring
 	call crlf
 	jmp L0
 
-.if(grade > 350)
-	mov okto,	true
-.elseif(grade>250 && credits <=16)
-	mov okto,	true
-.elseif(credits <= 12)
-	mov okto,	true
-.endif
 
-
-	mov eax,	okto
-	call writeint
-
+L3:
 
 	
 	exit
