@@ -1,0 +1,119 @@
+.386
+
+Include \masm32\include\Irvine32.inc
+Includelib \masm32\lib\Irvine32.lib 
+includelib \masm32\lib\Kernel32.lib
+includelib \masm32\lib\User32.lib
+
+.data
+	string1 	byte	"enter the PIN number:",0dh,0ah,0
+	string2 	byte	"valid",0dh,0ah,0
+	string3		byte	"invalid",0dh,0ah,0
+
+	number		dword	?
+	tt			dword	0
+	array		dword 	5	dup(?)
+	little		dword	5,2,4,1,3
+	big			dword	9,5,8,4,6
+	the 		dword	0
+	wrong 		dword 	5	dup(?)
+	rr			dword	0
+	rtime		dword 	0
+
+.code
+main PROC
+
+
+	call clrscr
+L0:
+	mov rtime,0
+	mov rr,	0
+
+	mov tt,0
+    mov edx,	offset	string1
+    call writestring
+
+    call readint
+    mov	number,	eax
+
+    mov ecx,	5
+    mov esi,	16
+
+ L1:
+ 	mov edx,	0
+ 	mov ebx,	10
+ 	div	ebx
+ 	mov array[esi],	edx
+ 	sub	esi,	4
+ 	loop L1
+
+
+ 	mov ecx,	5
+ 	mov esi,	0
+ 	mov the,	1
+ 	mov edi,	offset	wrong
+
+
+ L2:
+ mov tt ,	0
+ 	call validate_PIN
+ 	
+
+ 	.if(tt == 1)
+ 		mov rr,		1
+ 		mov eax,	the
+ 		mov [edi],	eax
+ 		add	edi,	4
+ 		inc rtime
+
+ 	.endif
+
+ 	inc the
+ 	add	esi,	4
+ 	loop l2
+
+ 	.if(rr == 1)
+ 		jmp endcode
+ 	.endif
+
+ 	mov edx,	offset	string2
+ 	call writestring
+ 	jmp L0
+
+endcode:
+	mov esi,	offset	wrong
+	mov ecx,	rtime
+
+L3:	
+	mov eax,	[esi]
+	call writedec
+	call crlf
+	add	esi,	4
+	loop L3
+
+	mov edx,	offset string3
+	call writestring
+	
+
+	jmp L0
+
+
+
+    exit
+main endp
+
+validate_PIN PROC USES eax esi
+
+	mov eax,	array[esi]
+	.if(eax < little[esi])
+		mov tt ,1
+	.elseif(eax > big[esi])
+		mov tt,1
+	.endif
+
+	ret
+validate_PIN ENDP
+
+	
+
+	END main
