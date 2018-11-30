@@ -94,7 +94,7 @@ L6:
 L1:
 	call crlf
 	mov edx,	offset yes
-	call writestring656
+	call writestring
 	call crlf
 
 	jmp L0
