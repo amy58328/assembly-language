@@ -6,26 +6,63 @@ includelib \masm32\lib\User32.lib
 
 
 .data
-	tableb	byte 10,20,30,40,50
-	rowsize = ($ - tableb)
-			byte 60,70,80,90,100
-			byte 110,120,130,140,150
+	message1 byte "Enter an integer: ",0dh,0ah,0
+	message2 byte "Enter another integer: ",0dh,0ah,0
+	message3 byte "The bigger number is: ",0
+	message4 byte "The small number is: ",0
+	t dword ?
+	max dword 0
+	min dword 1000
+	one dword 1
 
-	; row byte 1
-	; col byte 1
 .code
 main proc
-	mov eax,1
-	mov ebx,5
-	mul ebx
+	call clrscr
 
-	mov ebx, offset tableb
-	add ebx,eax
+	mov edx , offset message1
+	call writestring
 
-	mov esi,	1
-	mov eax,0
-	mov al,[ebx + esi]
-	call writeint
+	call readint
+	mov t, eax
+
+L1:
+	mov eax , t
+.if(eax <=0)
+	jmp L2
+.endif
+	sub eax, one
+	mov t , eax
+
+	mov edx, offset message2
+	call writestring
+
+	call readint
+
+	mov ebx , max
+.if(ebx < eax  )
+	mov max , eax
+.endif
+	
+	mov ebx , min
+.if(eax < ebx)
+	mov min, eax
+.endif
+	jmp L1
+	
+L2:
+	mov edx, offset message3
+	call writestring
+
+	mov eax , max
+	call writedec
+
+	call crlf
+
+	mov edx, offset message4
+	call writestring
+
+	mov eax , min
+	call writedec
 
 exit
 main endp
